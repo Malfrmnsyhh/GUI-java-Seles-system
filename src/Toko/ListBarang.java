@@ -161,6 +161,13 @@ public class ListBarang extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
+        txCari.addActionListener(this::txCariActionPerformed);
+        txCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txCariKeyTyped(evt);
+            }
+        });
+
         btnPilih.setText("Pilih");
         btnPilih.addActionListener(this::btnPilihActionPerformed);
 
@@ -211,6 +218,14 @@ public class ListBarang extends javax.swing.JFrame {
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void txCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txCariActionPerformed
+        cari();
+    }//GEN-LAST:event_txCariActionPerformed
+
+    private void txCariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txCariKeyTyped
+        cari();
+    }//GEN-LAST:event_txCariKeyTyped
 
   private void btnPilihActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPilihActionPerformed
     int i = jTable1.getSelectedRow();
