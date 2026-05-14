@@ -544,12 +544,12 @@ public class Penjualan extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txBayar;
-    private javax.swing.JTextField txHarga;
-    private javax.swing.JTextField txIDBarang;
+    public static javax.swing.JTextField txHarga;
+    public static javax.swing.JTextField txIDBarang;
     private javax.swing.JTextField txID_Customer;
     private javax.swing.JTextField txJumlah;
     private javax.swing.JTextField txKembalian;
-    private javax.swing.JTextField txNamaBarang;
+    public static javax.swing.JTextField txNamaBarang;
     private javax.swing.JTextField txNamaCustomer;
     private javax.swing.JTextField txNoTransaksi;
     private javax.swing.JTextField txTampil;
