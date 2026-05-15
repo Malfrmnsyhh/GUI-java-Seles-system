@@ -25,10 +25,15 @@ public class ListBarang extends javax.swing.JFrame {
     model.getDataVector().removeAllElements();
     model.fireTableDataChanged();
 
-    try {
-      Connection c = Koneksi.getKoneksi();
-      Statement s = c.createStatement();
+    // Bug Fix #1: Koneksi bisa null jika DB tidak tersedia
+    Connection c = Koneksi.getKoneksi();
+    if (c == null) {
+      javax.swing.JOptionPane.showMessageDialog(null, "Koneksi database gagal!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+      return;
+    }
 
+    try {
+      Statement s = c.createStatement();
       String sql = "SELECT * FROM barang";
       ResultSet r = s.executeQuery(sql);
 
@@ -46,13 +51,20 @@ public class ListBarang extends javax.swing.JFrame {
       r.close();
       s.close();
     } catch (Exception e) {
-      System.out.println("Terjadi Kesalahan");
+      e.printStackTrace();
+      javax.swing.JOptionPane.showMessageDialog(null, "Gagal memuat data!\n" + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
   }
 
   public void cari() {
-    DefaultTableModel tabel = new DefaultTableModel();
+    // Jika field pencarian kosong, tampilkan semua data
+    if (txCari.getText().trim().isEmpty()) {
+      jTable1.setModel(model);
+      loadData();
+      return;
+    }
 
+    DefaultTableModel tabel = new DefaultTableModel();
     tabel.addColumn("ID Barang");
     tabel.addColumn("Nama Barang");
     tabel.addColumn("Jenis");
@@ -62,7 +74,9 @@ public class ListBarang extends javax.swing.JFrame {
 
     try {
       Connection c = Koneksi.getKoneksi();
-      String sql = "SELECT * FROM barang WHERE LIKE '%" + txCari.getText() + "%'" +
+      // Bug Fix #2: Tambahkan nama kolom sebelum LIKE ("WHERE LIKE" tidak valid)
+      // Bug Fix #3: Tambahkan spasi sebelum OR
+      String sql = "SELECT * FROM barang WHERE ID_Barang LIKE '%" + txCari.getText() + "%' " +
           "OR Nama_Barang LIKE '%" + txCari.getText() + "%'";
       Statement stat = c.createStatement();
       ResultSet rs = stat.executeQuery(sql);
@@ -76,12 +90,11 @@ public class ListBarang extends javax.swing.JFrame {
             rs.getString(6)
         });
       }
+      // Bug Fix #4: Hapus loadData() yang menimpa hasil pencarian
       jTable1.setModel(tabel);
-      loadData();
     } catch (Exception e) {
-      System.out.println("Terjadi Kesalahan");
-    } finally {
-
+      e.printStackTrace();
+      javax.swing.JOptionPane.showMessageDialog(null, "Gagal mencari data!\n" + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
     }
   }
 
@@ -98,6 +111,8 @@ public class ListBarang extends javax.swing.JFrame {
     model.addColumn("Harga Jual");
     model.addColumn("Stok");
 
+    // Bug Fix #5: Set model ke jTable1 agar data tampil
+    jTable1.setModel(model);
     loadData();
   }
 
@@ -229,6 +244,12 @@ public class ListBarang extends javax.swing.JFrame {
 
   private void btnPilihActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPilihActionPerformed
     int i = jTable1.getSelectedRow();
+
+    // Bug Fix #6: Cek apakah ada baris yang dipilih sebelum mengambil data
+    if (i == -1) {
+      javax.swing.JOptionPane.showMessageDialog(null, "Pilih barang terlebih dahulu!", "Peringatan", javax.swing.JOptionPane.WARNING_MESSAGE);
+      return;
+    }
 
     String id = jTable1.getValueAt(i, 0).toString();
     String nama = jTable1.getValueAt(i, 1).toString();

@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -78,10 +77,10 @@ public class DataBarang extends javax.swing.JFrame {
         o[3] = r.getString("Ukuran");
         o[4] = r.getString("HargaBeli");
         o[5] = r.getString("HargaJual");
+        o[6] = r.getString("Stok");
 
         model.addRow(o);
       }
-
       r.close();
       s.close();
     } catch (Exception e) {
@@ -102,8 +101,7 @@ public class DataBarang extends javax.swing.JFrame {
 
     try {
       Connection c = Koneksi.getKoneksi();
-      String sql = "SELECT * FROM barang WHERE ID_Barang LIKE '%" + txCariData.getText() + "%'" +
-          "OR Nama_barang LIKE '%" + txCariData.getText() + "%'";
+      String sql = "SELECT * FROM barang WHERE ID_Barang LIKE '%" + txCariData.getText() + "%' OR Nama_Barang LIKE '%" + txCariData.getText() + "%'";
       Statement stat = c.createStatement();
       ResultSet rs = stat.executeQuery(sql);
       while (rs.next()) {
@@ -118,7 +116,6 @@ public class DataBarang extends javax.swing.JFrame {
         });
       }
       jTable1.setModel(tabel);
-      loadData();
     } catch (Exception e) {
       System.out.println("Error. mencari data gagal");
     } finally {
@@ -466,28 +463,40 @@ public class DataBarang extends javax.swing.JFrame {
   private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSimpanActionPerformed
     String id = txIDBarang.getText();
     String nama = txNamaBarang.getText();
-    String jenis = (String)cbJenisBarang.getSelectedItem();
-    String ukuran = (String)cbUkuran.getSelectedItem();
+    String jenis = (String) cbJenisBarang.getSelectedItem();
+    String ukuran = (String) cbUkuran.getSelectedItem();
     String hargaBeli = txHargaBeli.getText();
     String hargaJual = txHargaJual.getText();
     String stok = txStok.getText();
 
+    if (nama.isEmpty() || hargaBeli.isEmpty() || hargaJual.isEmpty() || stok.isEmpty()) {
+      JOptionPane.showMessageDialog(null, "Semua field harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+      return;
+    }
+
+    Connection c = Koneksi.getKoneksi();
+    if (c == null) {
+      JOptionPane.showMessageDialog(null, "Koneksi database gagal!", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
     try {
-      Connection c = Koneksi.getKoneksi();
-      String sql = "INSERT INTO barang VALUES (?, ?, ?, ?, ?, ?, ?)";
+      String sql = "INSERT INTO barang (ID_Barang, Nama_Barang, Jenis, Ukuran, HargaBeli, HargaJual, Stok) VALUES (?, ?, ?, ?, ?, ?, ?)";
       PreparedStatement p = c.prepareStatement(sql);
       p.setString(1, id);
-      p.setString(2,nama);
+      p.setString(2, nama);
       p.setString(3, jenis);
       p.setString(4, ukuran);
       p.setString(5, hargaBeli);
       p.setString(6, hargaJual);
-      p.setString(6, stok);
+      p.setString(7, stok);
       p.executeUpdate();
-      JOptionPane.showMessageDialog(null, "Data Tersimpan");
+      p.close();
+      JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
       loadData();
     } catch (Exception e) {
-      System.out.println("Terjadi Kesalahan");
+      e.printStackTrace();
+      JOptionPane.showMessageDialog(null, "Gagal menyimpan data!\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     } finally {
       autonumber();
       clear();
