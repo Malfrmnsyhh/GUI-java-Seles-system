@@ -56,7 +56,7 @@ public class MenuUtama extends javax.swing.JFrame {
             .addGap(0, 277, Short.MAX_VALUE)
         );
 
-        jMenu1.setText("Master Data");
+        jMenu1.setText("Kelola Data");
 
         jMenuItem1.setText("Data Barang");
         jMenuItem1.addActionListener(this::jMenuItem1ActionPerformed);
