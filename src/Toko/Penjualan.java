@@ -490,7 +490,6 @@ public class Penjualan extends javax.swing.JFrame {
     }
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int row = jTable1.getSelectedRow();
         model.removeRow(row);
@@ -500,20 +499,16 @@ public class Penjualan extends javax.swing.JFrame {
     }
 
     private void txNoTransaksiActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO add your handling code here:
     }
 
     private void txTampilActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
     }
 
     private void txJumlahActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
         tambahTransaksi();
     }
 
     private void txBayarActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        // TODO add your handling code here:
         int total, bayar, kembalian;
 
         total = Integer.valueOf(txTotalBayar.getText());
@@ -531,11 +526,6 @@ public class Penjualan extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
